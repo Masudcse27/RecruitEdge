@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JobPostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,4 +14,15 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('logout',[AuthController::class, 'logout']);
+
+    Route::controller(JobPostController::class)->prefix('job-post')->group(function(){
+        Route::post('/create','create')->middleware('role:employer');
+        Route::put('/update/{id}','update')->middleware('role:employer');
+        Route::delete('delete/{id}','delete')->middleware('role:employer,admin');
+    });
+});
+
+Route::prefix('job-post')->group(function(){
+    Route::get('/list',[JobPostController::class,'list']);
+    Route::get('/retrieve/{id}',[JobPostController::class,'retrieve']);
 });
