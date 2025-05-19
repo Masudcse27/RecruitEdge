@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JobPostController;
 use Illuminate\Http\Request;
@@ -19,6 +20,12 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('/create','create')->middleware('role:employer');
         Route::put('/update/{id}','update')->middleware('role:employer');
         Route::delete('delete/{id}','delete')->middleware('role:employer,admin');
+    });
+
+    Route::controller(ApplicationController::class)->prefix('application')->group(function(){
+        Route::post('/create','create')->middleware('role:user');
+        Route::get('/list/{id}','list')->middleware('role:employer');
+        Route::get('/retrieve/{id}', 'retrieve')->middleware('role:employer');
     });
 });
 
