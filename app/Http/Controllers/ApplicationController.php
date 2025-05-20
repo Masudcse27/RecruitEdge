@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ApplicationRequest;
+use App\Mail\JobApplicationSubmitted;
 use App\Models\Application;
 use App\Models\JobPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class ApplicationController extends Controller
@@ -32,6 +34,8 @@ class ApplicationController extends Controller
         $data['job_seeker_id'] = $request->user()->id;
         $application = Application::create($data);
 
+        $application->load('job');
+        Mail::to($application->email)->send(new JobApplicationSubmitted($application));
         return response()->json([
             'message' => 'Application submitted successfully.',
             'application' => $application,

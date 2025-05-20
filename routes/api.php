@@ -37,7 +37,9 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::patch('/change-password','changePassword');
         Route::patch('/change-profile-picture', 'changeProfilePicture');
     });
+    
     Route::get('/applied-jobs', [JobSeekerController::class,'appliedJobs'])->middleware('role:user');
+    
     Route::controller(AdminController::class)->prefix('/admin')->group(function(){
         Route::get('/pending-jobs','pendingJobs')->middleware('role:admin');
         Route::put('/approve-job/{id}','approveJob')->middleware('role:admin');
