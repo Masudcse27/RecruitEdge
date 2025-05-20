@@ -32,6 +32,7 @@ class JobPostController extends Controller
         $today = Carbon::today();
 
         $jobs = JobPost::whereDate('deadline', '>=', $today)
+            ->where('is_approved',true)
             ->orderBy('deadline', 'asc')
             ->paginate(10); 
 
