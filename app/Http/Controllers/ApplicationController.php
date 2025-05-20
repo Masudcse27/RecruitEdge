@@ -13,15 +13,23 @@ class ApplicationController extends Controller
     public function create(ApplicationRequest $request) {
         $data = $request->validated();
 
+        $is_applied = Application::where('job_post_id', $request->job_post_id)
+            ->where('job_seeker_id', $request->user()->id)
+            ->exists();
+
+        if ($is_applied) {
+            return response()->json(['message' => 'Already applied'], 400);
+        }
         $nameSlug = Str::slug($request->name);
         
         if($request->hasFile('cv')){
             $picExtension = $request->file('cv')->getClientOriginalExtension();
-            $picName = $nameSlug . '_' . $request->user()->id . 'cv' . '.' . $picExtension;
+            $picName = $nameSlug . '_' . $request->user()->id . '_cv' . '.' . $picExtension;
             $cvPath = $request->file('cv')->storeAs('cv', $picName, 'public');
             $data['cv'] = $cvPath;
         }
 
+        $data['job_seeker_id'] = $request->user()->id;
         $application = Application::create($data);
 
         return response()->json([
@@ -29,6 +37,7 @@ class ApplicationController extends Controller
             'application' => $application,
         ], 201);
     }
+    
     public function list(Request $request, $id){
         $job = JobPost::find($id);
 

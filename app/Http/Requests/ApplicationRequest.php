@@ -11,7 +11,7 @@ class ApplicationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,9 +22,10 @@ class ApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'job_post_id' => 'required|exists:job_posts,id',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:candidates,email',
-            'contact_number' => 'required|string',
+            'email' => 'required|email|max:255|unique:applications,email',
+            'contact_number' => 'required|string|max:20',
             'latest_degree' => 'required|string|max:255',
             'institute' => 'required|string|max:255',
             'cgpa' => 'required|numeric|between:0,4.0',

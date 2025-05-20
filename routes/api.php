@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JobPostController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,13 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('/create','create')->middleware('role:user');
         Route::get('/list/{id}','list')->middleware('role:employer');
         Route::get('/retrieve/{id}', 'retrieve')->middleware('role:employer');
+    });
+
+    Route::controller(ProfileController::class)->group(function(){
+        Route::get('/profile', 'profile');
+        Route::patch('/change-email', 'changeEmail');
+        Route::patch('/change-password','changePassword');
+        Route::patch('/change-profile-picture', 'changeProfilePicture');
     });
 });
 
